@@ -12,9 +12,20 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(bodyParser.json());
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true
-}));
+    origin: function(origin, callback) {
+      const allowedOrigins = [
+        'https://portfolio-rho-gilt-29.vercel.app',
+        'https://portfolio-rho-gilt-29.vercel.app/',
+        'http://localhost:5173/'
+      ];
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true
+  }));
 
 // Create a transporter using nodemailer
 const transporter = nodemailer.createTransport({
